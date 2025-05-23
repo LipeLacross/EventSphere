@@ -1,0 +1,167 @@
+Segue um escopo detalhado para o projeto Site de Eventos com Nuxt.js, incluindo as principais funcionalidades, objetivos e requisitos:
+
+Escopo do Projeto: Site de Eventos
+Objetivo:
+Desenvolver uma aplicação web para divulgação de eventos, permitindo aos usuários visualizar um calendário de eventos, acessar detalhes, realizar inscrições e visualizar a localização dos eventos em um mapa interativo.
+
+Funcionalidades Principais
+Página Inicial
+
+Apresentação do site e destaque para próximos eventos.
+
+Calendário de Eventos
+
+Visualização dos eventos em um calendário interativo.
+
+Filtros por data, categoria ou localização.
+
+Listagem de Eventos
+
+Exibição de todos os eventos futuros e passados.
+
+Cards com resumo: título, data, local e botão para detalhes.
+
+Detalhe do Evento
+
+Página com informações completas: descrição, data, horário, endereço, mapa interativo.
+
+Botão para inscrição no evento.
+
+Inscrição no Evento
+
+Formulário para o usuário preencher nome e e-mail.
+
+Validação dos dados e confirmação de inscrição.
+
+Armazenamento das inscrições (banco de dados ou serviço externo).
+
+Integração com Mapas
+
+Exibição do local do evento em um mapa (ex: Mapbox ou Google Maps).
+
+Possibilidade de traçar rota até o local.
+
+Administração
+
+Área restrita para cadastrar, editar e remover eventos.
+
+Visualização das inscrições por evento.
+
+Requisitos Técnicos
+Frontend: Nuxt.js (Vue 3)
+
+Estilização: Tailwind CSS ou Nuxt UI
+
+Backend: API interna do Nuxt (server/api) ou integração com serviço externo (ex: Supabase)
+
+Banco de Dados: Supabase, Firebase, MongoDB ou outro de sua escolha
+
+Mapas: Mapbox, Google Maps ou Leaflet
+
+Gerenciamento de Estado: Pinia (opcional)
+
+Hospedagem: Vercel, Netlify ou similar
+
+Estrutura de Pastas Sugerida
+/pages — Rotas principais (home, eventos, detalhes)
+
+/components — Componentes reutilizáveis (calendário, card, formulário, mapa)
+
+/assets — Imagens, estilos globais
+
+/server/api — Endpoints para eventos e inscrições
+
+/stores — Gerenciamento de estado (opcional)
+
+/public — Arquivos estáticos
+
+Diferenciais
+Área de login para administradores
+
+Upload de imagens para eventos
+
+Notificações por e-mail para inscritos
+
+Responsividade e acessibilidade aprimoradas
+Estrutura do Projeto: Site de Eventos com Nuxt.js
+A estrutura do projeto está organizada para garantir separação de responsabilidades, facilidade de manutenção e escalabilidade. Abaixo segue uma explicação detalhada da estrutura sugerida, alinhada ao escopo e requisitos apresentados:
+
+Diretórios e Arquivos Principais
+
+/assets
+Armazena arquivos estáticos processados, como imagens, fontes e estilos globais.
+
+/components
+Contém componentes Vue reutilizáveis, organizados por domínio:
+
+/events/: Componentes específicos de eventos (ex: Calendar.vue, EventCard.vue, EventDetails.vue, Map.vue).
+
+/ui/: Componentes de interface genéricos, como formulários (ex: RegistrationForm.vue).
+
+/composables
+Funções reutilizáveis baseadas em composition API do Vue (ex: useEvents.js para lógica compartilhada de eventos).
+
+/layouts
+Layouts personalizados para as páginas (ex: default.vue).
+
+/pages
+Estrutura de rotas automáticas do Nuxt:
+
+index.vue: Página inicial com destaques de eventos.
+
+/events/:
+
+index.vue: Lista de eventos com filtros.
+
+[id].vue: Detalhe dinâmico de cada evento.
+
+about.vue: Página "Sobre" (opcional).
+
+/public
+Arquivos estáticos acessíveis diretamente (ex: favicon, robots.txt).
+
+/server/api
+Endpoints da API interna do Nuxt para manipulação de eventos e inscrições:
+
+events.ts: CRUD de eventos.
+
+registrations.ts: Gerenciamento das inscrições.
+
+/stores
+Gerenciamento de estado global usando Pinia (opcional), ex: events.ts.
+
+nuxt.config.ts
+Arquivo de configuração do Nuxt, incluindo plugins, módulos, variáveis de ambiente e integrações.
+
+package.json
+Gerenciamento de dependências e scripts do projeto.
+
+.env
+Arquivo para variáveis de ambiente sensíveis, como tokens de API e chaves de serviços externos.
+
+Resumo Visual da Estrutura
+
+text
+my-event-app/
+├── assets/
+├── components/
+│   ├── events/
+│   └── ui/
+├── composables/
+├── layouts/
+├── pages/
+│   ├── index.vue
+│   ├── events/
+│   │   ├── index.vue
+│   │   └── [id].vue
+│   └── about.vue
+├── public/
+├── server/
+│   └── api/
+│       ├── events.ts
+│       └── registrations.ts
+├── stores/
+│   └── events.ts
+├── nuxt.config.ts
+├── package.json
+└── .env
