@@ -11,7 +11,7 @@
     </div>
 
     <RegistrationForm :event-id="$route.params.id" class="mt-8" />
-  </div>
+  </div>a
 </template>
 
 <script setup lang="ts">

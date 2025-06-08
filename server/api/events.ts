@@ -9,19 +9,17 @@ let events = [
 ]
 
 export default defineEventHandler(async (event) => {
-  // GET All
+  const { id } = event.context.params
   if (event.method === 'GET') {
-    return events
+    return events.find(e => e.id == id)
   }
-
-  // POST
-  if (event.method === 'POST') {
+  if (event.method === 'DELETE') {
+    events = events.filter(e => e.id != id)
+    return { ok: true }
+  }
+  if (event.method === 'PUT') {
     const body = await readBody(event)
-    const newEvent = {
-      id: events.length + 1,
-      ...body
-    }
-    events.push(newEvent)
-    return newEvent
+    events = events.map(e => (e.id == id ? { ...e, ...body } : e))
+    return events.find(e => e.id == id)
   }
 })
