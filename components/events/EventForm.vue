@@ -24,7 +24,7 @@
 
     <!-- Corpo do Formulário -->
     <div class="p-6">
-      <UForm :schema="schema" :state="form" class="space-y-6" @submit="onSubmit">
+      <form @submit.prevent="onSubmit" class="space-y-6">
         <!-- Informações Básicas -->
         <div class="space-y-4">
           <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -33,16 +33,25 @@
           </h4>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <UFormGroup label="Título do Evento" name="title" required>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Título do Evento *
+              </label>
               <UInput
                 v-model="form.title"
                 placeholder="Ex: Conferência de Tecnologia 2025"
                 icon="i-heroicons-calendar"
                 size="lg"
+                required
+                :class="{ 'border-red-500': errors.title }"
               />
-            </UFormGroup>
+              <p v-if="errors.title" class="text-red-500 text-xs mt-1">{{ errors.title }}</p>
+            </div>
 
-            <UFormGroup label="Categoria" name="category">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Categoria
+              </label>
               <USelect
                 v-model="form.category"
                 :options="categoryOptions"
@@ -50,7 +59,7 @@
                 icon="i-heroicons-tag"
                 size="lg"
               />
-            </UFormGroup>
+            </div>
           </div>
         </div>
 
@@ -62,17 +71,26 @@
           </h4>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <UFormGroup label="Data do Evento" name="date" required>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Data do Evento *
+              </label>
               <UInput
                 v-model="form.date"
                 type="date"
                 icon="i-heroicons-calendar-days"
                 size="lg"
+                required
                 :min="new Date().toISOString().split('T')[0]"
+                :class="{ 'border-red-500': errors.date }"
               />
-            </UFormGroup>
+              <p v-if="errors.date" class="text-red-500 text-xs mt-1">{{ errors.date }}</p>
+            </div>
 
-            <UFormGroup label="Horário" name="time">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Horário
+              </label>
               <UInput
                 v-model="form.time"
                 type="time"
@@ -80,7 +98,7 @@
                 size="lg"
                 placeholder="Ex: 14:30"
               />
-            </UFormGroup>
+            </div>
           </div>
         </div>
 
@@ -91,14 +109,20 @@
             Localização
           </h4>
 
-          <UFormGroup label="Endereço Completo" name="location" required>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Endereço Completo *
+            </label>
             <UInput
               v-model="form.location"
               placeholder="Ex: Av. Paulista, 1000 - São Paulo, SP"
               icon="i-heroicons-map-pin"
               size="lg"
+              required
+              :class="{ 'border-red-500': errors.location }"
             />
-          </UFormGroup>
+            <p v-if="errors.location" class="text-red-500 text-xs mt-1">{{ errors.location }}</p>
+          </div>
         </div>
 
         <!-- Descrição -->
@@ -108,49 +132,51 @@
             Descrição do Evento
           </h4>
 
-          <UFormGroup label="Descrição" name="description">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Descrição
+            </label>
             <UTextarea
               v-model="form.description"
               placeholder="Descreva os detalhes do evento, programação, palestrantes, etc."
               :rows="4"
               resize
             />
-          </UFormGroup>
+          </div>
         </div>
 
-        <!-- Upload de Imagem -->
+        <!-- Upload de Imagem - CORREÇÃO AQUI -->
         <div class="space-y-4">
           <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
             <UIcon name="i-heroicons-photo" class="w-5 h-5 text-primary-500" />
             Imagem do Evento
           </h4>
 
-          <UFormGroup label="Imagem" name="image">
-            <div class="space-y-3">
-              <UInput
-                type="file"
-                accept="image/*"
-                @change="onFileChange"
-                icon="i-heroicons-photo"
-                size="lg"
-              />
-              <p class="text-xs text-gray-500">Formatos aceitos: JPG, PNG, WebP. Tamanho máximo: 5MB</p>
+          <div class="space-y-3">
+            <!-- CORREÇÃO: Usando @change em vez de onChange -->
+            <input
+              type="file"
+              accept="image/*"
+              @change="onFileChange"
+              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+            />
+            <p class="text-xs text-gray-500">Formatos aceitos: JPG, PNG, WebP. Tamanho máximo: 5MB</p>
 
-              <!-- Preview da imagem -->
-              <div v-if="imagePreview" class="mt-3">
-                <img
-                  :src="imagePreview"
-                  alt="Preview da imagem"
-                  class="w-32 h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
-                />
-              </div>
+            <!-- Preview da imagem -->
+            <div v-if="imagePreview" class="mt-3">
+              <img
+                :src="imagePreview"
+                alt="Preview da imagem"
+                class="w-32 h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+              />
             </div>
-          </UFormGroup>
+          </div>
         </div>
 
         <!-- Botões de Ação -->
         <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
           <UButton
+            type="button"
             color="gray"
             variant="outline"
             @click="closeForm"
@@ -177,17 +203,16 @@
             {{ loading ? 'Salvando...' : (props.event ? 'Atualizar Evento' : 'Criar Evento') }}
           </UButton>
         </div>
-      </UForm>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { z } from 'zod'
 import { reactive, ref, onMounted, computed } from 'vue'
 import type { Event } from '~/types'
 
-// Definição das props
+// Props e eventos
 interface Props {
   event?: Event | null
 }
@@ -196,18 +221,19 @@ const props = withDefaults(defineProps<Props>(), {
   event: null
 })
 
-// Definir corretamente os eventos emit
 const emit = defineEmits<{
   close: []
   saved: [event: Event]
 }>()
 
+// Composables
 const supabase = useSupabaseClient()
 const toast = useToast()
 
-// Estados reativos
+// Estados
 const loading = ref(false)
 const imagePreview = ref<string | null>(null)
+const errors = ref<Record<string, string>>({})
 
 const form = reactive({
   title: '',
@@ -219,28 +245,7 @@ const form = reactive({
   image: null as File | null
 })
 
-// Schema de validação aprimorado
-const schema = z.object({
-  title: z.string()
-    .min(3, 'Título deve ter pelo menos 3 caracteres')
-    .max(100, 'Título deve ter no máximo 100 caracteres'),
-  date: z.string().min(1, 'Data é obrigatória'),
-  location: z.string()
-    .min(5, 'Localização deve ter pelo menos 5 caracteres')
-    .max(200, 'Localização deve ter no máximo 200 caracteres'),
-  description: z.string().max(1000, 'Descrição deve ter no máximo 1000 caracteres').optional(),
-  category: z.string().optional(),
-  time: z.string().optional()
-})
-
-// Validação do formulário
-const isFormValid = computed(() => {
-  return form.title.length >= 3 &&
-         form.date &&
-         form.location.length >= 5
-})
-
-// Opções de categoria
+// Opções
 const categoryOptions = [
   { label: 'Tecnologia', value: 'Tecnologia' },
   { label: 'Música', value: 'Música' },
@@ -253,13 +258,40 @@ const categoryOptions = [
   { label: 'Outro', value: 'Outro' }
 ]
 
-// Função para lidar com mudança de arquivo
-const onFileChange = (event: any) => {
+// Computed
+const isFormValid = computed(() => {
+  return form.title.length >= 3 &&
+         form.date &&
+         form.location.length >= 5
+})
+
+// Métodos
+const validateForm = () => {
+  errors.value = {}
+
+  if (!form.title || form.title.trim().length < 3) {
+    errors.value.title = 'Título deve ter pelo menos 3 caracteres'
+  }
+
+  if (!form.date) {
+    errors.value.date = 'Data é obrigatória'
+  }
+
+  if (!form.location || form.location.trim().length < 5) {
+    errors.value.location = 'Localização deve ter pelo menos 5 caracteres'
+  }
+
+  return Object.keys(errors.value).length === 0
+}
+
+// CORREÇÃO: Tipagem correta para o evento de arquivo
+const onFileChange = (event: Event) => {
+  // CORREÇÃO: Casting do target para HTMLInputElement
   const target = event.target as HTMLInputElement
   if (target.files && target.files[0]) {
     const file = target.files[0]
 
-    // Validar tamanho do arquivo (5MB)
+    // Validar tamanho
     if (file.size > 5 * 1024 * 1024) {
       toast.add({
         title: 'Arquivo muito grande',
@@ -272,7 +304,7 @@ const onFileChange = (event: any) => {
 
     form.image = file
 
-    // Criar preview da imagem
+    // Preview
     const reader = new FileReader()
     reader.onload = (e) => {
       imagePreview.value = e.target?.result as string
@@ -281,7 +313,6 @@ const onFileChange = (event: any) => {
   }
 }
 
-// Função para fazer upload da imagem
 const uploadImage = async (file: File): Promise<string> => {
   const fileExt = file.name.split('.').pop()
   const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
@@ -299,37 +330,38 @@ const uploadImage = async (file: File): Promise<string> => {
   return publicUrl.publicUrl
 }
 
-// Função principal de submissão
-const onSubmit = async (event: { data: any }) => {
+const onSubmit = async () => {
+  if (!validateForm()) return
+
   try {
     loading.value = true
 
     let image_url = props.event?.image_url || ''
 
-    // Upload da nova imagem se fornecida
+    // Upload da imagem se fornecida
     if (form.image) {
       image_url = await uploadImage(form.image)
     }
 
-    // Combinar data e horário se fornecidos
-    let eventDate = event.data.date
-    if (event.data.time) {
-      eventDate = `${event.data.date}T${event.data.time}`
+    // Preparar dados
+    let eventDate = form.date
+    if (form.time) {
+      eventDate = `${form.date}T${form.time}`
     }
 
     const eventData = {
-      title: event.data.title.trim(),
+      title: form.title.trim(),
       date: eventDate,
-      location: event.data.location.trim(),
-      description: event.data.description?.trim() || '',
-      category: event.data.category || '',
+      location: form.location.trim(),
+      description: form.description?.trim() || '',
+      category: form.category || '',
       image_url
     }
 
     let savedEvent: Event
 
     if (props.event) {
-      // Atualizar evento existente
+      // Atualizar
       const { data, error } = await supabase
         .from('events')
         .update(eventData)
@@ -340,7 +372,7 @@ const onSubmit = async (event: { data: any }) => {
       if (error) throw error
       savedEvent = data
     } else {
-      // Criar novo evento
+      // Criar
       const { data, error } = await supabase
         .from('events')
         .insert(eventData)
@@ -351,7 +383,6 @@ const onSubmit = async (event: { data: any }) => {
       savedEvent = data
     }
 
-    // Emitir evento de sucesso
     emit('saved', savedEvent)
 
     toast.add({
@@ -374,22 +405,24 @@ const onSubmit = async (event: { data: any }) => {
   }
 }
 
-// Função para fechar o formulário
 const closeForm = () => {
   // Limpar formulário
-  form.title = ''
-  form.date = ''
-  form.time = ''
-  form.location = ''
-  form.description = ''
-  form.category = ''
-  form.image = null
+  Object.assign(form, {
+    title: '',
+    date: '',
+    time: '',
+    location: '',
+    description: '',
+    category: '',
+    image: null
+  })
   imagePreview.value = null
+  errors.value = {}
 
   emit('close')
 }
 
-// Preencher formulário se estiver editando
+// Lifecycle
 onMounted(() => {
   if (props.event) {
     form.title = props.event.title
@@ -397,18 +430,18 @@ onMounted(() => {
     form.description = props.event.description || ''
     form.category = props.event.category || ''
 
-    // Separar data e horário se necessário
+    // Separar data e horário
     if (props.event.date) {
       if (props.event.date.includes('T')) {
         const [date, time] = props.event.date.split('T')
         form.date = date
-        form.time = time.substring(0, 5) // HH:MM
+        form.time = time.substring(0, 5)
       } else {
         form.date = props.event.date
       }
     }
 
-    // Mostrar preview da imagem existente
+    // Preview da imagem
     if (props.event.image_url) {
       imagePreview.value = props.event.image_url
     }

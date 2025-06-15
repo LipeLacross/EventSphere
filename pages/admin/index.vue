@@ -22,21 +22,15 @@
             <!-- Estatísticas Rápidas -->
             <div class="flex items-center gap-6 mt-4">
               <div class="flex items-center gap-2 text-sm">
-                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-success-500 rounded-full"></div>
                 <span class="text-gray-600 dark:text-gray-400">
-                  <span class="font-semibold text-green-600">{{ filteredEvents.length }}</span> próximos
+                  <span class="font-semibold text-success-600">{{ filteredEvents.length }}</span> próximos
                 </span>
               </div>
               <div class="flex items-center gap-2 text-sm">
-                <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-info-500 rounded-full"></div>
                 <span class="text-gray-600 dark:text-gray-400">
-                  <span class="font-semibold text-blue-600">{{ events.length }}</span> total
-                </span>
-              </div>
-              <div class="flex items-center gap-2 text-sm">
-                <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <span class="text-gray-600 dark:text-gray-400">
-                  <span class="font-semibold text-purple-600">{{ paginatedEvents.length }}</span> exibidos
+                  <span class="font-semibold text-info-600">{{ events.length }}</span> total
                 </span>
               </div>
             </div>
@@ -46,15 +40,15 @@
             <UButton
               color="primary"
               size="lg"
-              @click="openForm"
+              @click="openCreateForm"
               icon="i-heroicons-plus-circle"
               class="shadow-lg hover:shadow-xl transition-all duration-200"
-              :loading="creatingEvent"
+              :loading="loading"
             >
               Criar Evento
             </UButton>
             <UButton
-              color="gray"
+              color="neutral"
               variant="outline"
               size="lg"
               icon="i-heroicons-arrow-path"
@@ -88,7 +82,7 @@
               <UButton
                 v-if="hasActiveFilters"
                 @click="clearAllFilters"
-                color="gray"
+                color="neutral"
                 variant="ghost"
                 size="sm"
                 icon="i-heroicons-x-mark"
@@ -137,58 +131,38 @@
               size="lg"
             />
           </div>
-
-          <!-- Tags de Filtros Ativos -->
-          <div v-if="hasActiveFilters" class="flex flex-wrap gap-2">
-            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Filtros ativos:</span>
-
-            <UBadge
-              v-if="searchTerm"
-              color="primary"
-              variant="soft"
-              @click="searchTerm = ''"
-              class="cursor-pointer hover:bg-primary-200 dark:hover:bg-primary-800"
-            >
-              Pesquisa: "{{ searchTerm }}"
-              <UIcon name="i-heroicons-x-mark" class="w-3 h-3 ml-1" />
-            </UBadge>
-
-            <UBadge
-              v-if="filterCategory"
-              color="green"
-              variant="soft"
-              @click="filterCategory = ''"
-              class="cursor-pointer hover:bg-green-200 dark:hover:bg-green-800"
-            >
-              {{ filterCategory }}
-              <UIcon name="i-heroicons-x-mark" class="w-3 h-3 ml-1" />
-            </UBadge>
-
-            <UBadge
-              v-if="filterStatus"
-              color="blue"
-              variant="soft"
-              @click="filterStatus = ''"
-              class="cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-800"
-            >
-              {{ statusOptions.find(s => s.value === filterStatus)?.label }}
-              <UIcon name="i-heroicons-x-mark" class="w-3 h-3 ml-1" />
-            </UBadge>
-          </div>
         </div>
       </UCard>
 
-      <!-- Modal do Formulário -->
-      <UModal v-model="showForm" :ui="{ width: 'sm:max-w-4xl' }">
-        <EventForm
-          :event="editingEvent"
-          @close="closeForm"
-          @saved="handleEventSaved"
-        />
+      <!-- Modal do Formulário CORRIGIDO -->
+      <UModal v-model="isModalOpen" :ui="{ width: 'sm:max-w-4xl' }" prevent-close>
+        <UCard>
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                {{ editingEvent ? 'Editar Evento' : 'Criar Novo Evento' }}
+              </h3>
+              <UButton
+                color="neutral"
+                variant="ghost"
+                icon="i-heroicons-x-mark"
+                @click="closeModal"
+                size="sm"
+              />
+            </div>
+          </template>
+
+          <EventForm
+            :event="editingEvent"
+            :loading="formLoading"
+            @close="closeModal"
+            @saved="handleEventSaved"
+          />
+        </UCard>
       </UModal>
 
       <!-- Loading State -->
-      <UCard v-if="loading" class="shadow-lg border-0">
+      <UCard v-if="loading && events.length === 0" class="shadow-lg border-0">
         <div class="flex flex-col items-center justify-center py-20 space-y-6">
           <div class="relative">
             <div class="w-20 h-20 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
@@ -202,10 +176,10 @@
       </UCard>
 
       <!-- Error State -->
-      <UCard v-else-if="error" class="shadow-lg border-0 border-l-4 border-l-red-500">
+      <UCard v-else-if="error" class="shadow-lg border-0 border-l-4 border-l-error-500">
         <div class="py-12 text-center space-y-4">
-          <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto">
-            <UIcon name="i-heroicons-exclamation-triangle" class="w-8 h-8 text-red-600 dark:text-red-400" />
+          <div class="w-16 h-16 bg-error-100 dark:bg-error-900/30 rounded-full flex items-center justify-center mx-auto">
+            <UIcon name="i-heroicons-exclamation-triangle" class="w-8 h-8 text-error-600 dark:text-error-400" />
           </div>
           <UAlert
             color="error"
@@ -250,7 +224,7 @@
               v-if="events.length === 0"
               color="primary"
               size="lg"
-              @click="openForm"
+              @click="openCreateForm"
               icon="i-heroicons-plus-circle"
             >
               Criar Primeiro Evento
@@ -308,7 +282,7 @@
                     />
                     <div class="absolute top-2 right-2">
                       <UBadge
-                        :color="getEventStatus(event.date) === 'upcoming' ? 'green' : 'gray'"
+                        :color="getEventStatus(event.date) === 'upcoming' ? 'success' : 'neutral'"
                         variant="solid"
                         size="xs"
                       >
@@ -325,7 +299,7 @@
                       </h3>
                       <UBadge
                         v-if="!event.image_url"
-                        :color="getEventStatus(event.date) === 'upcoming' ? 'green' : 'gray'"
+                        :color="getEventStatus(event.date) === 'upcoming' ? 'success' : 'neutral'"
                         variant="soft"
                         size="xs"
                       >
@@ -363,7 +337,7 @@
                 <div class="flex gap-2 justify-end pt-4 border-t border-gray-100 dark:border-gray-700">
                   <UButton
                     :to="`/events/${event.id}`"
-                    color="gray"
+                    color="neutral"
                     variant="ghost"
                     size="sm"
                     icon="i-heroicons-eye"
@@ -427,13 +401,15 @@ useSeoMeta({
 const supabase = useSupabaseClient()
 const toast = useToast()
 
-// Estados reativos
+// Estados reativos principais
 const events = ref<Event[]>([])
-const showForm = ref(false)
 const loading = ref(true)
 const error = ref<string | null>(null)
+
+// Estados do modal e formulário
+const isModalOpen = ref(false)
 const editingEvent = ref<Event | null>(null)
-const creatingEvent = ref(false)
+const formLoading = ref(false)
 const deletingEvents = ref<number[]>([])
 
 // Filtros e pesquisa
@@ -531,7 +507,7 @@ const paginatedEvents = computed(() => {
   return filteredEvents.value.slice(start, start + itemsPerPage)
 })
 
-// Métodos
+// Métodos principais
 const fetchEvents = async () => {
   try {
     loading.value = true
@@ -568,18 +544,25 @@ const getEventStatus = (dateString: string) => {
   return new Date(dateString) > new Date() ? 'upcoming' : 'past'
 }
 
-const openForm = () => {
+// Métodos do modal e formulário
+const openCreateForm = () => {
   editingEvent.value = null
-  showForm.value = true
+  isModalOpen.value = true
 }
 
-const closeForm = () => {
-  showForm.value = false
+const editEvent = (event: Event) => {
+  editingEvent.value = event
+  isModalOpen.value = true
+}
+
+const closeModal = () => {
+  isModalOpen.value = false
   editingEvent.value = null
+  formLoading.value = false
 }
 
 const handleEventSaved = async (savedEvent: Event) => {
-  closeForm()
+  closeModal()
   await fetchEvents()
 
   toast.add({
@@ -588,11 +571,6 @@ const handleEventSaved = async (savedEvent: Event) => {
     color: 'success',
     icon: 'i-heroicons-check-circle'
   })
-}
-
-const editEvent = (event: Event) => {
-  editingEvent.value = event
-  showForm.value = true
 }
 
 const deleteEvent = async (id: number) => {
