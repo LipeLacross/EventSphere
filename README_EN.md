@@ -23,10 +23,8 @@
 
 ### Visual Example
 
-> **See the `/components/events/` folder for examples of key visual components such as calendar, cards, and forms.  
-> The layout follows the Nuxt UI standard, with a modern and responsive design.**
-
----
+![chrome-capture-2025-6-15](https://github.com/user-attachments/assets/64cbf9f9-a10b-4c70-b241-79c8ee527082)
+![Screenshot_15-6-2025_2916_supabase com](https://github.com/user-attachments/assets/a6e44d1a-4c3f-441d-805c-65c379873026)
 
 ## ✔️ Techniques and Technologies Used
 
