@@ -23,10 +23,8 @@ O **EventSphere** é uma plataforma moderna para divulgação e gestão de event
 
 ### Exemplo Visual do Projeto
 
-> **Veja na pasta `/components/events/` exemplos dos principais componentes visuais, como calendário, cards e formulários.  
-> O layout segue o padrão Nuxt UI, com design moderno e responsivo.**
-
----
+![chrome-capture-2025-6-15](https://github.com/user-attachments/assets/64cbf9f9-a10b-4c70-b241-79c8ee527082)
+![Screenshot_15-6-2025_2916_supabase com](https://github.com/user-attachments/assets/a6e44d1a-4c3f-441d-805c-65c379873026)
 
 ## ✔️ Técnicas e Tecnologias Utilizadas
 
