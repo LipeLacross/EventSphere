@@ -1,31 +1,37 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950">
-    <UHeader>
-      <template #title>
-        <NuxtLink to="/" class="text-xl font-bold">Eventos</NuxtLink>
-      </template>
-      <UNavigationMenu :items="navItems" />
-      <template #right>
-        <UButton to="/events" variant="ghost">Eventos</UButton>
-      </template>
-    </UHeader>
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <!-- Header/Navigation -->
+    <header class="bg-white dark:bg-gray-900 shadow-sm">
+      <div class="container mx-auto px-4 py-4">
+        <nav class="flex items-center justify-between">
+          <NuxtLink to="/" class="text-xl font-bold text-primary-600">
+            EventSphere
+          </NuxtLink>
+          <div class="flex items-center space-x-4">
+            <NuxtLink to="/events" class="text-gray-600 hover:text-primary-600">
+              Eventos
+            </NuxtLink>
+            <NuxtLink to="/admin" class="text-gray-600 hover:text-primary-600">
+              Admin
+            </NuxtLink>
+          </div>
+        </nav>
+      </div>
+    </header>
 
-    <main class="flex-1 container mx-auto p-4">
+    <!-- Main Content -->
+    <main class="flex-1">
       <slot />
     </main>
 
-    <UFooter class="bg-gray-100 mt-auto py-4">
-      <template #default>
-        <div class="container mx-auto text-center text-sm text-gray-600">
-          © 2025 Site de Eventos
-        </div>
-      </template>
-    </UFooter>
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-900 py-6 mt-auto">
+      <div class="container mx-auto px-4 text-center text-sm text-gray-500">
+        © 2025 EventSphere - Sistema de Gestão de Eventos
+      </div>
+    </footer>
+
+    <!-- Notifications -->
+    <UNotifications />
   </div>
 </template>
-
-<script setup lang="ts">
-const navItems = [
-  { label: 'Eventos', to: '/events' }
-]
-</script>

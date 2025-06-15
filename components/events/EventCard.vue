@@ -9,5 +9,18 @@
 </template>
 
 <script setup lang="ts">
-defineProps(['event'])
+interface Event {
+  id: number
+  title: string
+  date: string
+  location: string
+  description?: string
+  category?: string
+  image_url?: string
+}
+
+defineProps<{
+  event: Event
+}>()
+
 </script>
